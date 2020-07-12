@@ -113,3 +113,9 @@ Displays the command sender's position in the queue, or the referenced `member`.
 Displays the queue length of the waiting room associated with `monitorChannel`.  
 *Aliases:* `ql`  
 *Example:* `fcfs!ql "Waiting Room 1"`
+
+## Bot Deployment:  
+The simplest way to deploy the Bot is in a hosted service such as Heroku.
+Keep in mind that you will need to provide values for the following environment variables:
+* FCFS_BOT_TOKEN: Your bot's client secret
+* FCFS_BOT_OWNER: Comma-separated list of discord id's that will be the bot owners
