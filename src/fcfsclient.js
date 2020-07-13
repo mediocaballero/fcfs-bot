@@ -5,12 +5,13 @@ const ReadyListener = require('./listeners/client_ready');
 const ArgTypesRegistrar = require('./util/arg_types_registrar');
 
 const TOKEN = process.env.FCFS_BOT_TOKEN;
+const OWNER = process.env.FCFS_BOT_OWNER.split(",");
 const version = require('../package.json').version;
 
 class FCFSClient extends AkairoClient {
   constructor() {
     super({
-      ownerID: ['148611805445357569', '346826796483870741']
+      ownerID: OWNER
     }, {
       disableEveryone: true
     });
