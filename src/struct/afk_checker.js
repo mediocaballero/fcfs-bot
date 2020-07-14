@@ -22,11 +22,11 @@ class AFKChecker extends EventEmitter {
     }
     this.channelMonitor.lastAfkChecked[userToCheck.id] = Date.now() + this.channelMonitor.afkCheckDuration;
     
-    let mentionMessage = '**[AFK CHECK]**\nPress thumbs up if you are not AFK to keep your place in the waiting list';
+    let mentionMessage = '**[CHEQUEO AFK]**\nReacciona con el pulgar hacia arriba a este mensaje si no estás AFK para mantener tu posición en la lista de espera';
     await userToCheck.send(mentionMessage).then(msg => {
       msg.react('👍')
         .catch(err => {
-          console.log(`Failed to add reaction!\n${err.message}`);
+          console.log(`Fallo en reaccionar al mensaje!\n${err.message}`);
         });
 
       const filter = (reaction, user) => {
@@ -34,9 +34,9 @@ class AFKChecker extends EventEmitter {
       };
 
       let halfwayTimer = setTimeout(() => {
-        userToCheck.send('WARNING! Half of the afk check duration has elapsed! React now to keep your spot in queue!')
+        userToCheck.send('AVISO! Ha pasado ya la mitad de la duración del chequeo AFK! Reacciona ahora para mantener tu posición en la cola!')
           .catch(err => {
-            console.log(`Failed to send halfway-mark message!\n${err.message}`);
+            console.log(`Fallo al enviar el mensaje a mitad de tiempo de chequeo AFK!\n${err.message}`);
           });
       }, this.channelMonitor.afkCheckDuration / 2);
 
@@ -45,8 +45,8 @@ class AFKChecker extends EventEmitter {
             const reaction = collected.first();
 
             if (reaction.emoji.name === '👍') {
-              msg.edit('**[AFK CHECK]**\nThank you! You will be kept in the queue.')
-                .catch(err => console.log(`Failed to edit message!\n${err.message}`));
+              msg.edit('**[CHEQUEO AFK]**\nGracias! Se mantendrá tu petición en la lista!.')
+                .catch(err => console.log(`Fallo al editar el mensaje!\n${err.message}`));
               clearTimeout(halfwayTimer);
               this.notAFK++;
               this.emitIfSafe();
@@ -59,7 +59,7 @@ class AFKChecker extends EventEmitter {
           this.channelMonitor.removeUserFromQueue(userToCheck.id);
           this.afk++;
           this.emitIfSafe();
-          msg.reply('You failed to react to the message in time. You have been removed from the queue.')
+          msg.reply('Has fallado por no reaccionar al mensaje a tiempo. Se te ha eliminado de la lista.')
             .catch(err => console.log(`Failed to send missed check message!\n${err.message}`));
           return;
         });
