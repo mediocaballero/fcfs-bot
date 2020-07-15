@@ -90,6 +90,10 @@ Sets a user's position in the queue that they're in.
 `afkchecktop "<monitorChannel>"`,  
 AFK-checks all members displayed in the waiting room display.
 
+`pushuser <member> <positions>`  
+Pushes a user a set number of positions back in the queue that they're in.  
+*Aliases:* `push`
+
 ## Bot Helper commands:  
 *All of these commands require Bot Helper permissions to use.*  
 

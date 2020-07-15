@@ -111,6 +111,25 @@ class ChannelMonitor {
     delete this.removalTimers[userID];
   }
 
+  async pushBackUserInQueue(userID, positions) {
+    if (!this.initialised) await this.init();
+    let userIndex = this.queue.findIndex(el => el.id === userID);
+    if (userIndex === -1) return;
+	array_push(this.queue,userIndex,positions);	
+    this.timeoutUpdateDisplay();
+    this.client.dataSource.saveMonitor(this.id);
+    delete this.removalTimers[userID];
+  }
+
+  array_push(arr, old_index, positions) {
+	// If positions beyond end of queue, put at the end of queue
+	var new_index =  (old_index+positions >= arr.length?arr.length:old_index+positions);
+	
+	// Now remove the element from its old index (it's returned as an array) and push it in the new index   
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // just for testing, the array is modified by the splice
+  }
+
   timeoutUpdateDisplay() {
     if (this.updateTimer) return;
     this.updateTimer = setTimeout(() => this.updateDisplay(), 1500);
