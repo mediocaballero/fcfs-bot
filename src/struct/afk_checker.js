@@ -45,7 +45,7 @@ class AFKChecker extends EventEmitter {
             const reaction = collected.first();
 
             if (reaction.emoji.name === '👍') {
-              msg.edit('**[CHEQUEO AFK]**\nGracias! Se mantendrá tu petición en la lista!.')
+              msg.edit('**[CHEQUEO AFK]**\nGracias! Se mantendrá tu posición en la lista!.')
                 .catch(err => console.log(`Fallo al editar el mensaje!\n${err.message}`));
               clearTimeout(halfwayTimer);
               this.notAFK++;
