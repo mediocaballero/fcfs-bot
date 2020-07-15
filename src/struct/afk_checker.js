@@ -55,11 +55,12 @@ class AFKChecker extends EventEmitter {
             }
         })
         .catch(collected => {
-          voiceState.kick().catch(err => console.error(`Failed to kick user!\n${err.message}`));
-          this.channelMonitor.removeUserFromQueue(userToCheck.id);
+          //voiceState.kick().catch(err => console.error(`Failed to kick user!\n${err.message}`));
+          //this.channelMonitor.removeUserFromQueue(userToCheck.id);
+		  this.channelMonitor.pushBackUserInQueue(userToCheck.id, 10);
           this.afk++;
           this.emitIfSafe();
-          msg.reply('Has fallado por no reaccionar al mensaje a tiempo. Se te ha eliminado de la lista.')
+          msg.reply('Has fallado por no reaccionar al mensaje a tiempo. Se te ha empujado hacia el final de la lista.')
             .catch(err => console.log(`Failed to send missed check message!\n${err.message}`));
           return;
         });
@@ -74,7 +75,7 @@ class AFKChecker extends EventEmitter {
   async run() {
     let guild = this.client.guilds.resolve(this.server.id);
 
-    let members = this.users.map(user => guild.members.cache.get(user.id));
+    let members = this.users.reverse().map(user => guild.members.cache.get(user.id));
 
     let actuallyInVC = members.filter(member => (member.voice && member.voice.channelID === this.channelMonitor.id));
 
