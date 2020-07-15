@@ -14,8 +14,10 @@ class AFKChecker extends EventEmitter {
   async runSingle(userToCheck) {
     let guild = this.client.guilds.resolve(this.server.id);
     let voiceState = guild.members.cache.get(userToCheck.id).voice;
+	let extratime = (this.channelMonitor.queue.length - this.channelMonitor.queue.findIndex(user => user.id === userToCheck.id))*1000;
+	await new Promise(resolve => setTimeout(resolve, extratime));
 
-    if ((Date.now() - this.channelMonitor.lastAfkChecked[userToCheck.id]) < 300000) {
+    if ((Date.now() - this.channelMonitor.lastAfkChecked[userToCheck.id]) < 60000) {
       this.recentlyChecked++;
       this.recentlyCheckedUsers.push(userToCheck.displayName);
       this.emitIfSafe();
@@ -35,7 +37,7 @@ class AFKChecker extends EventEmitter {
       };
 
       let halfwayTimer = setTimeout(() => {
-        userToCheck.send('AVISO! Ha pasado ya la mitad de la duración del chequeo AFK! Reacciona ahora para mantener tu posición en la cola!')
+        userToCheck.send('AVISO! Ha pasado ya la mitad de la duración del chequeo AFK! Reacciona ahora para mantener tu posición en la lista!')
           .catch(err => {
             console.log(`Fallo al enviar el mensaje a mitad de tiempo de chequeo AFK!\n${err.message}`);
           });
@@ -57,12 +59,13 @@ class AFKChecker extends EventEmitter {
             }
         })
         .catch(collected => {
-          voiceState.kick().catch(err => console.error(`Failed to kick user!\n${err.message}`));
-          this.channelMonitor.removeUserFromQueue(userToCheck.id);
+          //voiceState.kick().catch(err => console.error(`Failed to kick user!\n${err.message}`));
+          //this.channelMonitor.removeUserFromQueue(userToCheck.id);
+		  this.channelMonitor.pushBackUserInQueue(userToCheck.id, 5);
           this.afk++;
           this.afkUsers.push(userToCheck.displayName);
           this.emitIfSafe();
-          msg.reply('Has fallado por no reaccionar al mensaje a tiempo. Se te ha eliminado de la lista.')
+          msg.reply('Has fallado por no reaccionar al mensaje a tiempo. Se te ha empujado hacia el final de la lista.')
             .catch(err => console.log(`Failed to send missed check message!\n${err.message}`));
           return;
         });
@@ -77,7 +80,7 @@ class AFKChecker extends EventEmitter {
   async run() {
     let guild = this.client.guilds.resolve(this.server.id);
 
-    let members = this.users.map(user => guild.members.cache.get(user.id));
+    let members = this.users.reverse().map(user => guild.members.cache.get(user.id));
 
     let actuallyInVC = members.filter(member => (member.voice && member.voice.channelID === this.channelMonitor.id));
 

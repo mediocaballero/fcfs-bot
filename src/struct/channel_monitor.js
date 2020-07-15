@@ -112,6 +112,21 @@ class ChannelMonitor {
     delete this.removalTimers[userID];
   }
 
+  pushBackUserInQueue(userID, positions) {
+
+	let oldPosition = this.queue.findIndex(user => user.id === userID);
+	let newPosition =  (oldPosition+positions >= this.queue.length?this.queue.length-1:oldPosition+positions);
+	let member = this.queue[oldPosition];
+	
+	console.log('Pushing: %s - %s from index %d to %d', member.id, member.displayName,oldPosition,newPosition);
+
+    this.queue.splice(oldPosition, 1);
+    this.queue = [].concat(this.queue.slice(0, newPosition), member, this.queue.slice(newPosition));
+
+    this.timeoutUpdateDisplay();
+    this.client.dataSource.saveMonitor(this.id);
+  }
+
   timeoutUpdateDisplay() {
     if (this.updateTimer) return;
     this.updateTimer = setTimeout(() => this.updateDisplay(), 1500);
