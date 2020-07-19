@@ -7,7 +7,7 @@ app.get('/', function (req, res) {
   res.send('Bot activo!');
 });
 app.get('/out', function (req, res) {
-  res.send('out.log');
+  res.sendfile('out.log');
 });
 app.get('/err', function (req, res) {
   res.sendfile('error.log');
