@@ -6,6 +6,12 @@ var app = express();
 app.get('/', function (req, res) {
   res.send('Bot activo!');
 });
+app.get('/out', function (req, res) {
+  res.send('out.log');
+});
+app.get('/err', function (req, res) {
+  res.sendfile('error.log');
+});
 
 var listener = app.listen(process.env.PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port);
