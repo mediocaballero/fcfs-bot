@@ -30,7 +30,7 @@ class PushUserCommand extends Command {
     let server = ds.servers[message.guild.id];
     let channelMonitor = server.channelMonitors[args.member.voice.channelID];
 
-    await channelMonitor.pushBackUserInQueue(args.member, args.positions);
+    await channelMonitor.pushBackUserInQueue(args.member.id, args.positions);
     let newPosition = channelMonitor.queue.findIndex(user => user.id === args.member.id) + 1;
     channelMonitor.timeoutUpdateDisplay();
     ds.saveMonitor(channelMonitor.id);
