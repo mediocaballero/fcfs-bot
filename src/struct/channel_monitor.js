@@ -79,8 +79,9 @@ class ChannelMonitor {
 
     let title = `**${this.name} Queue:**`;
     let top = this.queue.slice(0, this.displaySize).map((user, index) => `${index + 1}. ${guild.members.cache.get(user.id).displayName} (${user.tag})`).join('\n');
+	let rest = this.queue.slice(this.displaySize).map((user, index) => `${index + 1 + this.displaySize}. ${guild.members.cache.get(user.id).displayName} (${user.tag})`).join('\n');
 
-    return title + '\n```\n' + (top || '<EMPTY>') + '\n```';
+    return title +'\n With AFK check:'+ '\n```\n' + (top || '<EMPTY>')+ '\n```' +'\nWithout check:'+ '\n```\n' + (rest || '<EMPTY>')+ '\n```';
   }
 
   async addUserToQueue(userID) {
