@@ -17,6 +17,7 @@ class AFKChecker extends EventEmitter {
 
     if ((Date.now() - this.channelMonitor.lastAfkChecked[userToCheck.id]) < 300000) {
       this.recentlyChecked++;
+      this.recentlyCheckedUsers.push(userToCheck.displayName);
       this.emitIfSafe();
       return;
     }
@@ -49,6 +50,7 @@ class AFKChecker extends EventEmitter {
                 .catch(err => console.log(`Fallo al editar el mensaje!\n${err.message}`));
               clearTimeout(halfwayTimer);
               this.notAFK++;
+              this.notAFKUsers.push(userToCheck.displayName);
               this.emitIfSafe();
               this.channelMonitor.lastAfkChecked[userToCheck.id] = Date.now();
               return;
@@ -58,6 +60,7 @@ class AFKChecker extends EventEmitter {
           voiceState.kick().catch(err => console.error(`Failed to kick user!\n${err.message}`));
           this.channelMonitor.removeUserFromQueue(userToCheck.id);
           this.afk++;
+          this.afkUsers.push(userToCheck.displayName);
           this.emitIfSafe();
           msg.reply('Has fallado por no reaccionar al mensaje a tiempo. Se te ha eliminado de la lista.')
             .catch(err => console.log(`Failed to send missed check message!\n${err.message}`));
@@ -83,6 +86,12 @@ class AFKChecker extends EventEmitter {
     this.notAFK = 0;
     this.afk = 0;
 
+    this.recentlyCheckedUsers = [];
+    this.notInVCUsers = [];
+    this.notAFKUsers = [];
+    this.afkUsers = [];
+	
+
     let promises = actuallyInVC.map(user => this.runSingle(user));
     await Promise.all(promises);
 
@@ -90,7 +99,11 @@ class AFKChecker extends EventEmitter {
       recentlyChecked: this.recentlyChecked,
       notInVC: this.notInVC,
       notAFK: this.notAFK,
-      afk: this.afk
+      afk: this.afk,
+      recentlyCheckedUsers: this.recentlyCheckedUsers,
+      notInVCUsers: this.notInVCUsers,
+      notAFKUsers: this.notAFKUsers,
+      afkUsers: this.afkUsers
     };
   }
 

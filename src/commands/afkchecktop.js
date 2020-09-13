@@ -33,20 +33,26 @@ class AfkCheckTopCommand extends Command {
 
     const update = (message, data) => {
       let text = `Mass AFK-checking...\n\n`;
-      if (data.recentlyChecked) text += `${data.recentlyChecked} member(s) were recently afk-checked and were skipped over\n`;
-      if (data.notInVC) text += `${data.notInVC} member(s) were not actually in the voice channel and were skipped over\n`;
-      if (data.notAFK) text += `${data.notAFK} member(s) reacted to the message in time\n`;
-      if (data.afk) text += `${data.afk} member(s) were booted from the queue\n`;
+      if (data.recentlyChecked) text += `${data.recentlyChecked} member(s) were recently afk-checked and were skipped over:\n`;
+      if (data.recentlyCheckedUsers) text += data.recentlyCheckedUsers;
+      if (data.notInVC) text += `\n\n${data.notInVC} member(s) were not actually in the voice channel and were skipped over:\n`;
+      if (data.notAFK) text += `\n\n${data.notAFK} member(s) reacted to the message in time:\n`;
+      if (data.notAFKUsers) text += data.notAFKUsers;
+      if (data.afk) text += `\n\n${data.afk} member(s) were booted from the queue:\n`;
+      if (data.afkUsers) text += data.afkUsers;
 
       message.edit(text).catch(err => console.log(`Failed to update in mass check!\n${err.message}`));
     };
 
     const finalize = (message, data) => {
       let text = `Mass AFK-checking complete!\n\n`;
-      if (data.recentlyChecked) text += `${data.recentlyChecked} member(s) were recently afk-checked and were skipped over\n`;
-      if (data.notInVC) text += `${data.notInVC} member(s) were not actually in the voice channel and were skipped over\n`;
-      if (data.notAFK) text += `${data.notAFK} member(s) reacted to the message in time\n`;
-      if (data.afk) text += `${data.afk} member(s) were booted from the queue\n`;
+      if (data.recentlyChecked) text += `${data.recentlyChecked} member(s) were recently afk-checked and were skipped over:\n`;
+      if (data.recentlyCheckedUsers) text += data.recentlyCheckedUsers;
+      if (data.notInVC) text += `\n\n${data.notInVC} member(s) were not actually in the voice channel and were skipped over:\n`;
+      if (data.notAFK) text += `\n\n${data.notAFK} member(s) reacted to the message in time:\n`;
+      if (data.notAFKUsers) text += data.notAFKUsers;
+      if (data.afk) text += `\n\n${data.afk} member(s) were booted from the queue:\n`;
+      if (data.afkUsers) text += data.afkUsers;
 
       message.edit(text).catch(err => console.log(`Failed to finalize in mass check!\n${err.message}`));
     };
