@@ -18,20 +18,26 @@ class AFKCheckScheduler {
 
       const update = (message, data) => {
         let text = `Auto chequeo AFK...\n\n`;
-        if (data.recentlyChecked) text += `${data.recentlyChecked} miembro(s) fueron chequeados por AFK y se les saltó\n`;
+        if (data.recentlyChecked) text += `${data.recentlyChecked} miembro(s) fueron chequeados por AFK y se les saltó:\n`;
+		if (data.recentlyCheckedUsers) text += data.recentlyCheckedUsers;
         if (data.notInVC) text += `${data.notInVC} miembros(s) no estaban en el canal de voz y se les saltó\n`;
-        if (data.notAFK) text += `${data.notAFK} miembro(s) reaccionaron al mensaje a tiempo\n`;
-        if (data.afk) text += `${data.afk} miembro(s) fueron expulsados de la lista\n`;
+        if (data.notAFK) text += `${data.notAFK} miembro(s) reaccionaron al mensaje a tiempo:\n`;
+		if (data.notAFKUsers) text += data.notAFKUsers;
+        if (data.afk) text += `${data.afk} miembro(s) fueron expulsados de la lista:\n`;
+		if (data.afkUsers) text += data.afkUsers;
 
         message.edit(text).catch(err => console.log(`Failed to update in auto check!\n${err.message}`));
       };
 
       const finalize = (message, data) => {
         let text = `Auto chequeo AFK completo!\n\n`;
-        if (data.recentlyChecked) text += `${data.recentlyChecked} miembro(s) fueron chequeados por AFK recientemente y se les saltó\n`;
-        if (data.notInVC) text += `${data.notInVC} miembro(s) no estaban en el canal de voz y se les saltó\n`;
-        if (data.notAFK) text += `${data.notAFK} miembro(s) reaccionaron al mensaje a tiempo\n`;
-        if (data.afk) text += `${data.afk} miembro(s) fueron expulsados de la lista\n`;
+        if (data.recentlyChecked) text += `${data.recentlyChecked} miembro(s) fueron chequeados por AFK y se les saltó:\n`;
+		if (data.recentlyCheckedUsers) text += data.recentlyCheckedUsers;
+        if (data.notInVC) text += `${data.notInVC} miembros(s) no estaban en el canal de voz y se les saltó\n`;
+        if (data.notAFK) text += `${data.notAFK} miembro(s) reaccionaron al mensaje a tiempo:\n`;
+		if (data.notAFKUsers) text += data.notAFKUsers;
+        if (data.afk) text += `${data.afk} miembro(s) fueron expulsados de la lista:\n`;
+		if (data.afkUsers) text += data.afkUsers;
 
         message.edit(text).catch(err => console.log(`Failed to finalize in auto check!\n${err.message}`));
       };
