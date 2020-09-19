@@ -61,7 +61,7 @@ class AFKChecker extends EventEmitter {
         .catch(collected => {
           //voiceState.kick().catch(err => console.error(`Failed to kick user!\n${err.message}`));
           //this.channelMonitor.removeUserFromQueue(userToCheck.id);
-		  this.channelMonitor.pushBackUserInQueue(userToCheck.id, 5);
+		  this.channelMonitor.pushBackUserInQueue(userToCheck.id, 20);
           this.afk++;
           this.afkUsers.push(userToCheck.displayName);
           this.emitIfSafe();
