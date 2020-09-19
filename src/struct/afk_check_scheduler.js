@@ -44,7 +44,11 @@ class AFKCheckScheduler {
 
       let resultsMessage = await sendmessage(outputChannel, 'Auto chequeo AFK...');
 
-      let top = this.channelMonitor.queue.slice(0, this.channelMonitor.displaySize).map(user => guild.members.cache.get(user.id));
+	  let afkUsers = this.channelMonitor.queue.slice(0, this.channelMonitor.displaySize).filter(user => guild.members.cache.get(user.id).roles.cache.find(role => role.name === "AFK")).length;
+
+	  console.log('AFK users:'+afkUsers+' Checking first '+ (afkUsers+this.channelMonitor.displaySize) +' queue positions');
+
+      let top = this.channelMonitor.queue.slice(0, this.channelMonitor.displaySize+afkUsers).map(user => guild.members.cache.get(user.id));
 
       let afkChecker = new AFKChecker(this.client, server, this.channelMonitor, top);
 

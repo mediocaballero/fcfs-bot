@@ -15,7 +15,7 @@ module.exports = {
     MAX: 10
   },
   Interval: {
-    MIN: '30m',
+    MIN: '5m',
     MAX: '4h'
   },
   HelpPages: {

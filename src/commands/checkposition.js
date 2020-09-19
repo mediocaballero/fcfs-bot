@@ -20,7 +20,13 @@ class CheckPositionCommand extends Command {
             } else {
               const guild = this.client.guilds.resolve(message.guild.id);
               member = guild.members.resolve(message.author.id);
+				// Remove AFK role
+				const role = guild.roles.cache.find(role => role.name === "AFK");
+				if(member.roles.cache.find(role => role.name === "AFK")) {
+	  				member.roles.remove(role);	
+				} 
             }
+			
             
             let voiceState = member.voice;
             if (!voiceState.channelID) return Flag.fail({ reason: 'memberNotInVoice', member });
@@ -47,6 +53,9 @@ class CheckPositionCommand extends Command {
     let channelMonitor = server.channelMonitors[voiceState.channelID];
 
     let position = channelMonitor.queue.findIndex(user => user.id === args.member.id) + 1;
+
+    channelMonitor.timeoutUpdateDisplay();
+    ds.saveMonitor(channelMonitor.id);
 
     return sendmessage(message.channel, `La posición de ${args.member.displayName} en ---${channelMonitor.name}--- es: ${position}`);
   }

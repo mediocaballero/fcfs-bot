@@ -59,7 +59,11 @@ class AfkCheckTopCommand extends Command {
 
     let resultsMessage = await sendmessage(message.channel, 'Mass AFK-checking...');
 
-    let top = channelMonitor.queue.slice(0, channelMonitor.displaySize).map(user => message.guild.members.cache.get(user.id));
+	let afkUsers = channelMonitor.queue.slice(0, channelMonitor.displaySize).filter(user => message.guild.members.cache.get(user.id).roles.cache.find(role => role.name === "AFK")).length;
+
+    console.log('AFK users:'+afkUsers+' Checking first '+ (afkUsers+channelMonitor.displaySize) +' queue positions');
+
+    let top = channelMonitor.queue.slice(0, channelMonitor.displaySize+afkUsers).map(user => message.guild.members.cache.get(user.id));
 
     let afkChecker = new AFKChecker(this.client, server, channelMonitor, top);
 
