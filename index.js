@@ -10,7 +10,7 @@ app.get('/out', function (req, res) {
   res.sendfile('out.log');
 });
 app.get('/err', function (req, res) {
-  res.sendfile('error.log');
+  res.sendfile('err.log');
 });
 
 var listener = app.listen(process.env.PORT, function() {
