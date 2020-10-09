@@ -45,15 +45,45 @@ class HostPullCommand extends Command {
 
 	let calledUsers = channelMonitor.queue.filter(user => !message.guild.members.cache.get(user.id).roles.cache.has(afkRole.id)).slice(0,args.count);
 
+	  const update = (message, data) => {
+	    let text = `Esperando reacciones... `;
+	    
+		if (data.notInVC) text += `\n${data.notInVC} ya no están en el canal de voz y se les saltó, `;
+		if (data.recentlyCheckedUsers) text += `${data.recentlyCheckedUsers} ya demostraron estar vivos recientemente, `;	    	    
+		if (data.notAFKUsers) text += `${data.notAFKUsers} reaccionaron, están vivos, `;
+		if (data.afkUsers) text += `${data.afkUsers} están AFK y han sido pensalizados, sigue buscando...`;
+	
+	    message.edit(text).catch(err => console.log(`Fallo al actualizar !\n${err.message}`));
+	  };
+	
+	  const finalize = (message, data) => {
+	    let text = `Se acabó el chequeo...`;
+		if (data.notInVC) text += `\n${data.notInVC} ya no están en el canal de voz y se les saltó, `;
+		if (data.recentlyCheckedUsers) text += `${data.recentlyCheckedUsers} ya demostraron estar vivos recientemente, `;	    	    
+		if (data.notAFKUsers) text += `${data.notAFKUsers} reaccionaron, están vivos, `;
+		if (data.afkUsers) text += `${data.afkUsers} están AFK y han sido pensalizados, sigue buscando...`;
+	
+	    message.edit(text).catch(err => console.log(`Failed to finalize in auto check!\n${err.message}`));
+	  };
+
     console.log('Host '+message.author.username +' calling '+args.count+' users: '+ calledUsers.map(u => u.username).join(','));
 	if (calledUsers.length != 0) {
 	    let membersMessage = message.channel.send('Habéis sido llamados: '+ calledUsers.map(u => u.toString()).join(',')+ '\nDebéis responder al host o seréis penalizados!').catch(err => console.log(`Failed!\n${err.message}`));
-	
+	    
+		let resultsMessage = await sendmessage(outputChannel, 'Esperando reacciones...');
+
 	    let top = calledUsers.map(user => message.guild.members.cache.get(user.id));
 	
 	    let afkChecker = new AFKChecker(this.client, server, channelMonitor, top);
 	
-	    let results = await afkChecker.run();
+	      afkChecker.on('update', (data) => {
+	        update(resultsMessage, data);
+	      });
+	
+	      let results = await afkChecker.run();
+	      finalize(resultsMessage, results);
+	      afkChecker.removeAllListeners('update');
+
 	} else {
 		message.channel.send('Pero no hay miembros disponibles');
 	}

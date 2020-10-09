@@ -24,7 +24,14 @@ class setAFKCommand extends Command {
 			} else {
 				member.roles.add(role);				
 			} 
-	
+
+            let voiceState = member.voice;
+            if (!voiceState.channelID) return Flag.fail({ reason: 'memberNotInVoice', member });
+        
+            let ds = this.client.dataSource;
+            let server = ds.servers[message.guild.id];
+            let channelMonitor = server.channelMonitors[voiceState.channelID];
+            if (!channelMonitor) return Flag.fail({ reason: 'memberNotInMonitoredChannel', member });	
 
             return member;
           },
