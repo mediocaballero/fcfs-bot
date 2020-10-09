@@ -47,24 +47,24 @@ class HostPullCommand extends Command {
 
 	  const update = (message, data) => {
 	    let text = `Esperando reacciones...\n`;
-	    text +="````"
+	    text +="```"
 		if (data.notInVC) text += `\n${data.notInVC} --> ya no están en el canal de voz y se les saltó,\n`;
 		if (data.recentlyCheckedUsers.length!=0) text += `${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente,\n`;	    	    
 		if (data.notAFKUsers.length!=0) text += `${data.notAFKUsers} --> reaccionaron, están vivos,\n`;
 		if (data.afkUsers.length!=0) text += `${data.afkUsers} --> no responden y han sido penalizados, sigue buscando...`;
-		text +="````"
+		text +="```"
 		
 	    message.edit(text).catch(err => console.log(`Fallo al actualizar !\n${err.message}`));
 	  };
 	
 	  const finalize = (message, data) => {
 	    let text = `Se acabó el chequeo!\n`;
-	    text +="````"
+	    text +="```"
 		if (data.notInVC) text += `\n${data.notInVC} --> ya no están en el canal de voz y se les saltó,\n`;
 		if (data.recentlyCheckedUsers.length!=0) text += `${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente,\n`;	    	    
 		if (data.notAFKUsers.length!=0) text += `${data.notAFKUsers} --> reaccionaron, están vivos,\n`;
 		if (data.afkUsers.length!=0) text += `${data.afkUsers} --> no responden y han sido penalizados, sigue buscando...`;
-		text +="````"
+		text +="```"
 	    message.edit(text).catch(err => console.log(`Failed to finalize in auto check!\n${err.message}`));
 	  };
 
