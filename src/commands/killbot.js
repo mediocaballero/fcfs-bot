@@ -24,11 +24,12 @@ class KillBotCommand extends Command {
 	try {
 		console.error('Deleting DB at ' + path);
 	  // Delete DB
-	  //fs.unlinkSync(path)
+	  fs.unlinkSync(path)
 	} catch(err) {
 	  console.error(err)
 	}
 	await sendmessage(message.channel, `Borrado de la BBDD con éxito, el bot deberá ser reconfigurado. Intentando reinicio de bot...`);
+	console.error('Closing app...');
 	process.exit(-1);
   }
 }
