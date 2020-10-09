@@ -46,22 +46,23 @@ class HostPullCommand extends Command {
 	let calledUsers = channelMonitor.queue.filter(user => !message.guild.members.cache.get(user.id).roles.cache.has(afkRole.id)).slice(0,args.count);
 
 	  const update = (message, data) => {
-	    let text = `Esperando reacciones... `;
+	    let text = `Esperando reacciones...\n`;
 	    
-		if (data.notInVC) text += `\n${data.notInVC} ya no están en el canal de voz y se les saltó, `;
-		if (data.recentlyCheckedUsers) text += `${data.recentlyCheckedUsers} ya demostraron estar vivos recientemente, `;	    	    
-		if (data.notAFKUsers) text += `${data.notAFKUsers} reaccionaron, están vivos, `;
-		if (data.afkUsers) text += `${data.afkUsers} están AFK y han sido pensalizados, sigue buscando...`;
+		if (data.notInVC) text += `\n${data.notInVC} ya no están en el canal de voz y se les saltó,\n`;
+		if (data.recentlyCheckedUsers.length!=0) text += `${data.recentlyCheckedUsers} ya demostraron estar vivos recientemente,\n`;	    	    
+		if (data.notAFKUsers.length!=0) text += `${data.notAFKUsers} reaccionaron, están vivos,\n`;
+		if (data.afkUsers.length!=0) text += `${data.afkUsers} están AFK y han sido pensalizados, sigue buscando...`;
 	
 	    message.edit(text).catch(err => console.log(`Fallo al actualizar !\n${err.message}`));
 	  };
 	
 	  const finalize = (message, data) => {
-	    let text = `Se acabó el chequeo...`;
-		if (data.notInVC) text += `\n${data.notInVC} ya no están en el canal de voz y se les saltó, `;
-		if (data.recentlyCheckedUsers) text += `${data.recentlyCheckedUsers} ya demostraron estar vivos recientemente, `;	    	    
-		if (data.notAFKUsers) text += `${data.notAFKUsers} reaccionaron, están vivos, `;
-		if (data.afkUsers) text += `${data.afkUsers} están AFK y han sido pensalizados, sigue buscando...`;
+	    let text = `Se acabó el chequeo!\n`;
+	    
+		if (data.notInVC) text += `\n${data.notInVC} ya no están en el canal de voz y se les saltó,\n`;
+		if (data.recentlyCheckedUsers.length!=0) text += `${data.recentlyCheckedUsers} ya demostraron estar vivos recientemente,\n`;	    	    
+		if (data.notAFKUsers.length!=0) text += `${data.notAFKUsers} reaccionaron, están vivos,\n`;
+		if (data.afkUsers.length!=0) text += `${data.afkUsers} están AFK y han sido pensalizados, sigue buscando...`;
 	
 	    message.edit(text).catch(err => console.log(`Failed to finalize in auto check!\n${err.message}`));
 	  };
