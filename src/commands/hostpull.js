@@ -70,7 +70,7 @@ class HostPullCommand extends Command {
 	if (calledUsers.length != 0) {
 	    let membersMessage = message.channel.send('Habéis sido llamados: '+ calledUsers.map(u => u.toString()).join(',')+ '\nDebéis responder al host o seréis penalizados!').catch(err => console.log(`Failed!\n${err.message}`));
 	    
-		let resultsMessage = await sendmessage(outputChannel, 'Esperando reacciones...');
+		let resultsMessage = await message.channel.send('Esperando reacciones...');
 
 	    let top = calledUsers.map(user => message.guild.members.cache.get(user.id));
 	
