@@ -28,7 +28,7 @@ class KillBotCommand extends Command {
 	} catch(err) {
 	  console.error(err)
 	}
-	sendmessage(message.channel, `Borrado de la BBDD con éxito, el bot deberá ser reconfigurado`);
+	await sendmessage(message.channel, `Borrado de la BBDD con éxito, el bot deberá ser reconfigurado. Intentando reinicio de bot...`);
 	process.exit(-1);
   }
 }
