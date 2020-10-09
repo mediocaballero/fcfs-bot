@@ -48,24 +48,25 @@ class HostPullCommand extends Command {
 	  const update = (message, data) => {
 	    let text = `Esperando reacciones...\n`;
 	    text +="```"
-		if (data.notInVC) text += `\n${data.notInVC} --> ya no están en el canal de voz y se les saltó,\n`;
-		if (data.recentlyCheckedUsers.length!=0) text += `${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente,\n`;	    	    
-		if (data.notAFKUsers.length!=0) text += `${data.notAFKUsers} --> reaccionaron, están vivos,\n`;
-		if (data.afkUsers.length!=0) text += `${data.afkUsers} --> no responden y han sido penalizados, sigue buscando...`;
+		if (data.notInVC) text += `* \n${data.notInVC} --> ya no están en el canal de voz y se les saltó\n`;
+		if (data.recentlyCheckedUsers.length!=0) text += `* ${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente\n`;	    	    
+		if (data.notAFKUsers.length!=0) text += `* ${data.notAFKUsers} --> reaccionaron, están vivos\n`;
+		if (data.afkUsers.length!=0) text += `* ${data.afkUsers} --> no responden y han sido penalizados, sigue buscando...`;
 		text +="```"
 		
-	    message.edit(text).catch(err => console.log(`Fallo al actualizar !\n${err.message}`));
+	    message.edit(text).catch(err => console.log(`Fallo al actualizar!\n${err.message}`));
 	  };
 	
 	  const finalize = (message, data) => {
 	    let text = `Se acabó el chequeo!\n`;
 	    text +="```"
-		if (data.notInVC) text += `\n${data.notInVC} --> ya no están en el canal de voz y se les saltó,\n`;
-		if (data.recentlyCheckedUsers.length!=0) text += `${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente,\n`;	    	    
-		if (data.notAFKUsers.length!=0) text += `${data.notAFKUsers} --> reaccionaron, están vivos,\n`;
-		if (data.afkUsers.length!=0) text += `${data.afkUsers} --> no responden y han sido penalizados, sigue buscando...`;
+		if (data.notInVC) text += `* \n${data.notInVC} --> ya no están en el canal de voz y se les saltó\n`;
+		if (data.recentlyCheckedUsers.length!=0) text += `* ${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente\n`;	    	    
+		if (data.notAFKUsers.length!=0) text += `* ${data.notAFKUsers} --> reaccionaron, están vivos\n`;
+		if (data.afkUsers.length!=0) text += `* ${data.afkUsers} --> no responden y han sido penalizados, sigue buscando...`;
 		text +="```"
-	    message.edit(text).catch(err => console.log(`Failed to finalize in auto check!\n${err.message}`));
+		
+	    message.edit(text).catch(err => console.log(`Fallo al finalizar!\n${err.message}`));
 	  };
 
     console.log('Host '+message.author.username +' calling '+args.count+' users: '+ calledUsers.map(u => u.username).join(','));
