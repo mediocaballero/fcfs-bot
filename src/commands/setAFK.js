@@ -62,6 +62,7 @@ class setAFKCommand extends Command {
 	    channelMonitor.queue.splice(oldPosition, 1);
 	    channelMonitor.queue = [].concat(channelMonitor.queue.slice(0, newPosition), args.member.user, channelMonitor.queue.slice(newPosition));
 		channelMonitor.timeoutUpdateDisplay();
+	    ds.saveMonitor(channelMonitor.id);
     	return sendmessage(message.channel, `Se ha establecido el estado de  ${args.member.displayName} como AFK y se le ha empujado como penalización ${afkPositionsPenalty} posiciones hasta la ${newPosition+1}`);		
 	}
   }
