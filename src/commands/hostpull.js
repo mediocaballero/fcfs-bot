@@ -49,9 +49,9 @@ class HostPullCommand extends Command {
 	    let text = `Esperando reacciones...\n`;
 	    text +="```"
 		if (data.notInVC) text += `* \n${data.notInVC} --> ya no están en el canal de voz y se les saltó\n`;
-		if (data.recentlyCheckedUsers.length!=0) text += `* ${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente\n`;	    	    
-		if (data.notAFKUsers && data.notAFKUsers.length!=0) text += `* ${data.notAFKUsers} --> reaccionaron, están vivos\n`;
-		if (data.afkUsers && data.afkUsers.length!=0) text += `* ${data.afkUsers} --> no responden y han sido penalizados, sigue buscando...`;
+		if (data.recentlyChecked) text += `* ${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente\n`;	    	    
+		if (data.notAFK) text += `* ${data.notAFKUsers} --> reaccionaron, están vivos\n`;
+		if (data.afkUsers) text += `* ${data.afkUsers} --> no responden y han sido penalizados, sigue buscando...`;
 		text +="```"
 		
 	    message.edit(text).catch(err => console.log(`Fallo al actualizar!\n${err.message}`));
@@ -61,11 +61,13 @@ class HostPullCommand extends Command {
 	    let text = `Se acabó el chequeo!\n`;
 	    text +="```"
 		if (data.notInVC) text += `* \n${data.notInVC} --> ya no están en el canal de voz y se les saltó\n`;
-		if (data.recentlyCheckedUsers.length!=0) text += `* ${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente\n`;	    	    
-		if (data.notAFKUsers.length!=0) text += `* ${data.notAFKUsers} --> reaccionaron, están vivos\n`;
-		if (data.afkUsers.length!=0) text += `* ${data.afkUsers} --> no responden y han sido penalizados, sigue buscando...`;
+		if (data.recentlyChecked) text += `* ${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente\n`;	    	    
+		if (data.notAFK) text += `* ${data.notAFKUsers} --> reaccionaron, están vivos\n`;
+		if (data.afk) text += `* ${data.afkUsers} --> no responden y han sido penalizados, sigue buscando...`;
 		text +="```"
 		
+		console.log(`Results: ${data.recentlyChecked} AFK or checked (${data.recentlyCheckedUsers}),  ${data.notInVC} not in VC, (${data.notAFK}) not AFK (${data.notAFKUsers}), ${data.afk} AFK (${data.afkUsers})`);
+
 	    message.edit(text).catch(err => console.log(`Fallo al finalizar!\n${err.message}`));
 	  };
 

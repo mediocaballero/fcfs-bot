@@ -18,12 +18,12 @@ class AFKCheckScheduler {
 
       const update = (message, data) => {
         let text = `Auto chequeo AFK...\n\n`;
-        if (data.recentlyChecked) text += `${data.recentlyChecked} miembro(s) fueron chequeados por AFK y se les saltó:\n`;
+        if (data.recentlyChecked) text += `${data.recentlyChecked} miembro(s) están AFK o ya fueron chequeados y se les saltó:\n`;
 		if (data.recentlyCheckedUsers) text += data.recentlyCheckedUsers;
         if (data.notInVC) text += `\n${data.notInVC} miembros(s) no estaban en el canal de voz y se les saltó\n`;
         if (data.notAFK) text += `\n${data.notAFK} miembro(s) reaccionaron al mensaje a tiempo:\n`;
 		if (data.notAFKUsers) text += data.notAFKUsers;
-        if (data.afk) text += `\n${data.afk} miembro(s) fueron expulsados de la lista:\n`;
+        if (data.afk) text += `\n${data.afk} miembro(s) fueron penalizados:\n`;
 		if (data.afkUsers) text += data.afkUsers;
 
         message.edit(text).catch(err => console.log(`Failed to update in auto check!\n${err.message}`));
@@ -31,13 +31,15 @@ class AFKCheckScheduler {
 
       const finalize = (message, data) => {
         let text = `Auto chequeo AFK completo!\n\n`;
-        if (data.recentlyChecked) text += `${data.recentlyChecked} miembro(s) fueron chequeados por AFK y se les saltó:\n`;
+        if (data.recentlyChecked) text += `${data.recentlyChecked} miembro(s) están AFK o ya fueron chequeados y se les saltó:\n`;
 		if (data.recentlyCheckedUsers) text += data.recentlyCheckedUsers;
         if (data.notInVC) text += `\n${data.notInVC} miembros(s) no estaban en el canal de voz y se les saltó\n`;
         if (data.notAFK) text += `\n${data.notAFK} miembro(s) reaccionaron al mensaje a tiempo:\n`;
 		if (data.notAFKUsers) text += data.notAFKUsers;
-        if (data.afk) text += `\n${data.afk} miembro(s) fueron expulsados de la lista:\n`;
+        if (data.afk) text += `\n${data.afk} miembro(s) fueron penalizados:\n`;
 		if (data.afkUsers) text += data.afkUsers;
+
+		console.log(`Results: ${data.recentlyChecked} AFK or checked (${data.recentlyCheckedUsers}),  ${data.notInVC} not in VC, (${data.notAFK}) not AFK (${data.notAFKUsers}), ${data.afk} AFK (${data.afkUsers})`);
 
         message.edit(text).catch(err => console.log(`Failed to finalize in auto check!\n${err.message}`));
       };
