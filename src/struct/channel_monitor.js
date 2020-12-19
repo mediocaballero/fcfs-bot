@@ -79,6 +79,7 @@ class ChannelMonitor {
 	let role = guild.roles.cache.find(role => role.name === "AFK");
     let title = `**${this.name}:**`;
 	let order = 0;
+	
 	let afkUsers = this.queue.slice(0, this.displaySize).filter(user => guild.members.cache.get(user.id).roles.cache.find(role => role.name === "AFK")).length;
 
     let top = this.queue.slice(0, this.displaySize+afkUsers).map((user, index) => `${guild.members.cache.get(user.id).roles.cache.get(role.id)?"~AFK..":++order}. ${guild.members.cache.get(user.id).displayName} (${user.tag})`).join('\n');

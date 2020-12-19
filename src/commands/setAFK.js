@@ -16,14 +16,6 @@ class setAFKCommand extends Command {
 
             const guild = this.client.guilds.resolve(message.guild.id);
             member = guild.members.resolve(message.author.id);
-			// Set AFK role
-			const role = guild.roles.cache.find(role => role.name === "AFK");
-
-			if(member.roles.cache.find(role => role.name === "AFK")) {
-  				member.roles.remove(role);	
-			} else {
-				member.roles.add(role);				
-			} 
 
             let voiceState = member.voice;
             if (!voiceState.channelID) return Flag.fail({ reason: 'memberNotInVoice', member });
@@ -48,12 +40,20 @@ class setAFKCommand extends Command {
 
 	const afkPositionsPenalty = 4;
 	
+	// Switch AFK role
+	const role = message.guild.roles.cache.find(role => role.name === "AFK");
+
 	if (args.member.roles.cache.find(role => role.name === "AFK")){
 		// Set as not AFK
+		await args.member.roles.remove(role);
 		channelMonitor.timeoutUpdateDisplay();
+	    ds.saveMonitor(channelMonitor.id);
+
     	return sendmessage(message.channel, `Se ha restablecido el estado de  ${args.member.displayName} como no AFK`);		
 	} else {
 		// Set as AFK
+		await args.member.roles.add(role);				
+
 		let oldPosition = channelMonitor.queue.findIndex(user => user.id === args.member.id);
 		let newPosition =  (oldPosition+afkPositionsPenalty >= channelMonitor.queue.length?channelMonitor.queue.length-1:oldPosition+afkPositionsPenalty);
 		

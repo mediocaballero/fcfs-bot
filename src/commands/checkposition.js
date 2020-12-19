@@ -20,14 +20,8 @@ class CheckPositionCommand extends Command {
             } else {
               const guild = this.client.guilds.resolve(message.guild.id);
               member = guild.members.resolve(message.author.id);
-				// Remove AFK role
-				const role = guild.roles.cache.find(role => role.name === "AFK");
-				if(member.roles.cache.find(role => role.name === "AFK")) {
-	  				member.roles.remove(role);	
-				} 
             }
-			
-            
+			            
             let voiceState = member.voice;
             if (!voiceState.channelID) return Flag.fail({ reason: 'memberNotInVoice', member });
         
@@ -39,7 +33,13 @@ class CheckPositionCommand extends Command {
             return member;
           },
           otherwise: (msg, { failure }) => apf(this.client, msg, 'member', failure)
-        }
+        },
+ 		{
+          id: 'isSelf',
+          type: (message, phrase) => {
+			return !phrase;
+		  }
+		}
       ]
     });
   }
@@ -54,10 +54,19 @@ class CheckPositionCommand extends Command {
 
     let position = channelMonitor.queue.findIndex(user => user.id === args.member.id) + 1;
 
+	let removedText = "";
+	
+	// Remove AFK role
+	if (args.isSelf){
+		const role = message.guild.roles.cache.find(role => role.name === "AFK");
+		if(args.member.roles.cache.find(role => role.name === "AFK")) {
+			await args.member.roles.remove(role);
+			removedText = " y se le ha eliminado el estado AFK"
+		}
+	}
     channelMonitor.timeoutUpdateDisplay();
     ds.saveMonitor(channelMonitor.id);
-
-    return sendmessage(message.channel, `La posición de ${args.member.displayName} en ---${channelMonitor.name}--- es: ${position}`);
+    return sendmessage(message.channel, `La posición de ${args.member.displayName} en ---${channelMonitor.name}--- es: ${position} ${removedText}`);
   }
 }
 
