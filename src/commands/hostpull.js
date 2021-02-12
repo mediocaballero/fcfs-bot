@@ -1,8 +1,10 @@
 const { Command, Argument, Flag } = require('discord-akairo');
 const mps_helper = require('../util/mps_helper');
 const sendmessage = require('../util/sendmessage');
+const role_utils= require('../util/role_utils');
 const apf = require('../util/arg_parse_failure');
 const AFKChecker = require('../struct/afk_checker');
+
 
 class HostPullCommand extends Command {
   constructor() {
@@ -42,6 +44,7 @@ class HostPullCommand extends Command {
 
     let callMessage = message.channel.send(`El host ${message.author} está llamando a ${args.count} miembros de ${channelMonitor.channel}... \n`);
 	let afkRole = message.guild.roles.cache.find(role => role.name === "AFK");
+	let anchorRole = message.guild.roles.cache.find(role => role.name === "ancla");
 
 	let calledUsers = channelMonitor.queue.filter(user => !message.guild.members.cache.get(user.id).roles.cache.has(afkRole.id)).slice(0,args.count);
 
@@ -61,12 +64,16 @@ class HostPullCommand extends Command {
 	    let text = `Se acabó el chequeo!\n`;
 	    text +="```"
 		if (data.notInVC) text += `* \n${data.notInVC} --> ya no están en el canal de voz y se les saltó\n`;
-		if (data.recentlyChecked) text += `* ${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente\n`;	    	    
-		if (data.notAFK) text += `* ${data.notAFKUsers} --> reaccionaron, están vivos\n`;
+		if (data.recentlyChecked) text += `* ${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente y se cambiará su status de ancla\n`;	    	    
+		if (data.notAFK) text += `* ${data.notAFKUsers} --> reaccionaron, están vivos y se cambiará su status de ancla\n`;
 		if (data.afk) text += `* ${data.afkUsers} --> no responden y han sido penalizados, sigue buscando...`;
 		text +="```"
 		
 		console.log(`Results: ${data.recentlyChecked} AFK or checked (${data.recentlyCheckedUsers}),  ${data.notInVC} not in VC, (${data.notAFK}) not AFK (${data.notAFKUsers}), ${data.afk} AFK (${data.afkUsers})`);
+
+		// (Un)Mark anchors		
+		data.notAFKUsers.map(user => role_utils.switchAnchorRole(message.guild, user));
+		data.recentlyCheckedUsers.map(user => role_utils.switchAnchorRole(message.guild, user));
 
 	    message.edit(text).catch(err => console.log(`Fallo al finalizar!\n${err.message}`));
 	  };
