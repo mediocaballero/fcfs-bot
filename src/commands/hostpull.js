@@ -72,8 +72,8 @@ class HostPullCommand extends Command {
 		console.log(`Results: ${data.recentlyChecked} AFK or checked (${data.recentlyCheckedUsers}),  ${data.notInVC} not in VC, (${data.notAFK}) not AFK (${data.notAFKUsers}), ${data.afk} AFK (${data.afkUsers})`);
 
 		// (Un)Mark anchors		
-		data.notAFKUsers.map(user => role_utils.switchAnchorRole(message.guild, user));
-		data.recentlyCheckedUsers.map(user => role_utils.switchAnchorRole(message.guild, user));
+		data.notAFKUsers.map(user => role_utils.addAnchorRole(message.guild, user));
+		data.recentlyCheckedUsers.map(user => role_utils.addAnchorRole(message.guild, user));
 
 	    message.edit(text).catch(err => console.log(`Fallo al finalizar!\n${err.message}`));
 	  };
