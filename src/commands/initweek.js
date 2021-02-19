@@ -35,7 +35,16 @@ class InitWeekCommand extends Command {
 	sendmessage(message.channel, 'Roles AFK eliminados!');
 
 	// Open closed  queue rooms
-	sendmessage(message.channel, '(pendiente)Salas abiertas!');
+	
+	let HOSTING_ROLE = 	message.guild.roles.cache.find(role => role.name === "Hosting");
+
+	sendmessage(message.channel, 'Abriendo salas de espera...');
+	message.guild.channels.cache.filter(channel => channel.name.includes("espera")).map(channel => channel.overwritePermissions([
+	{
+		id: HOSTING_ROLE.id,
+		allow: ['CONNECT'],
+	}]));
+	sendmessage(message.channel, 'Salas de espera abiertas!');
 	
     return sendmessage(message.channel, 'Semana iniciada, GL&HF!');
   }
