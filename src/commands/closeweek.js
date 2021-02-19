@@ -1,12 +1,11 @@
 const { Command } = require('discord-akairo');
 const mps_admin = require('../util/mps_admin');
 const sendmessage = require('../util/sendmessage');
-const apf = require('../util/arg_parse_failure');
 
-class InitWeekCommand extends Command {
+class CloseWeekCommand extends Command {
   constructor() {
-    super('initweek', {
-      aliases: ['initweek', 'init'],
+    super('closeweek', {
+      aliases: ['closeweek', 'close'],
       split: 'quoted',
       channel: 'guild',
       userPermissions: (message) => mps_admin(this.client, message)
@@ -16,18 +15,9 @@ class InitWeekCommand extends Command {
   async exec(message, args) {
     let ds = this.client.dataSource;
 
-	sendmessage(message.channel, 'Iniciando semana...!');
+	sendmessage(message.channel, 'Cerrando semana...!');
 	
-	// Clear all Hosted
-
-	let ANCHOR_ROLE = 	message.guild.roles.cache.find(role => role.name === "ancla");
-
-	sendmessage(message.channel, 'Eliminando roles ancla...');
-	message.guild.members.cache.map( member=> {if (member.roles.cache.has(ANCHOR_ROLE.id)) member.roles.remove(ANCHOR_ROLE);});
-	sendmessage(message.channel, 'Roles ancla eliminados!');
-
 	// Clear all AFKs
-
 	let AFK_ROLE = 	message.guild.roles.cache.find(role => role.name === "AFK");
 
 	sendmessage(message.channel, 'Eliminando roles AFK...');
@@ -35,17 +25,16 @@ class InitWeekCommand extends Command {
 	sendmessage(message.channel, 'Roles AFK eliminados!');
 
 	// Open closed  queue rooms
-	
 	let HOSTING_ROLE = 	message.guild.roles.cache.find(role => role.name === "Hosting");
 
-	sendmessage(message.channel, 'Abriendo salas de espera...');
+	sendmessage(message.channel, 'Cerrando salas de espera...');
 	message.guild.channels.cache.filter(channel => channel.name.includes("espera")).map(channel => channel.updateOverwrite(
-	HOSTING_ROLE.id,{CONNECT:true}
+	HOSTING_ROLE.id,{CONNECT:false}
 	));
-	sendmessage(message.channel, 'Salas de espera abiertas!');
+	sendmessage(message.channel, 'Salas de espera cerradas!');
 	
-    return sendmessage(message.channel, 'Semana iniciada, GL&HF!');
+    return sendmessage(message.channel, 'Semana cerrada, hasta pronto!');
   }
 }
 
-module.exports = InitWeekCommand;
+module.exports = CloseWeekCommand;
