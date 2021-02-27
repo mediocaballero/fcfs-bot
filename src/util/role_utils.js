@@ -51,4 +51,13 @@ async function switchAfkRole(guild, name) {
 
 }
 
-module.exports = { switchAnchorRole, addAnchorRole, switchAfkRole };
+async function dragHostedMember(guild, name) {
+	
+	console.log(`Moving user ${name} to hosted VC`);
+	const HOSTED_VC = guild.channels.cache.find(channel => channel.name === "Arrastre Hosteados");
+	const member = guild.members.cache.find(member => member.displayName === name);		
+	member.voice.setChannel(HOSTED_VC, "Va a ser hosteado");
+	
+}
+
+module.exports = { switchAnchorRole, addAnchorRole, switchAfkRole, dragHostedMember };

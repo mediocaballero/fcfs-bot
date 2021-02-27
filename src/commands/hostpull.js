@@ -64,8 +64,8 @@ class HostPullCommand extends Command {
 	    let text = `Se acabó el chequeo!\n`;
 	    text +="```"
 		if (data.notInVC) text += `* \n${data.notInVC} --> ya no están en el canal de voz y se les saltó\n`;
-		if (data.recentlyChecked) text += `* ${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente y se cambiará su status de ancla\n`;	    	    
-		if (data.notAFK) text += `* ${data.notAFKUsers} --> reaccionaron, están vivos y se cambiará su status de ancla\n`;
+		if (data.recentlyChecked) text += `* ${data.recentlyCheckedUsers} --> ya demostraron estar vivos recientemente, se les arrastrará de la lista y se cambiará su status de ancla\n`;	    	    
+		if (data.notAFK) text += `* ${data.notAFKUsers} --> reaccionaron, están vivos. Se les arrastrará de la lista y se cambiará su status de ancla\n`;
 		if (data.afk) text += `* ${data.afkUsers} --> no responden y han sido penalizados, sigue buscando...`;
 		text +="```"
 		
@@ -74,6 +74,11 @@ class HostPullCommand extends Command {
 		// (Un)Mark anchors		
 		data.notAFKUsers.map(user => role_utils.addAnchorRole(message.guild, user));
 		data.recentlyCheckedUsers.map(user => role_utils.addAnchorRole(message.guild, user));
+		
+		// Move anchors to another VC
+		
+		data.notAFKUsers.map(user => role_utils.dragHostedMember(message.guild, user));
+		data.recentlyCheckedUsers.map(user => role_utils.dragHostedMember(message.guild, user));
 
 	    message.edit(text).catch(err => console.log(`Fallo al finalizar!\n${err.message}`));
 	  };
