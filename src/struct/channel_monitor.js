@@ -80,10 +80,12 @@ class ChannelMonitor {
     let title = `**${this.name}:**`;
 	let order = 0;
 	
-	let afkUsers = this.queue.slice(0, this.displaySize).filter(user => guild.members.cache.get(user.id).roles.cache.find(role => role.name === "AFK")).length;
+	// Count AFK users
+	let calledUsers = this.queue.filter(user => guild.members.cache.get(user.id).roles.cache.find(role => role.name != "AFK")).slice(0, this.displaySize);
+	let splitPoint = this.queue.findIndex(user => user === calledUsers[calledUsers.length-1])+1;
 
-    let top = this.queue.slice(0, this.displaySize+afkUsers).map((user, index) => `${guild.members.cache.get(user.id).roles.cache.get(role.id)?"~AFK..":++order}. ${guild.members.cache.get(user.id).displayName} (${user.tag})`).join('\n');
-	let rest = this.queue.slice(this.displaySize+afkUsers).map((user, index) => `${guild.members.cache.get(user.id).roles.cache.get(role.id)?"~AFK..":++order}. ${guild.members.cache.get(user.id).displayName} (${user.tag})`).join('\n');
+    let top = this.queue.slice(0, splitPoint).map((user, index) => `${guild.members.cache.get(user.id).roles.cache.get(role.id)?"~AFK..":++order}. ${guild.members.cache.get(user.id).displayName} (${user.tag})`).join('\n');
+	let rest = this.queue.slice(splitPoint).map((user, index) => `${guild.members.cache.get(user.id).roles.cache.get(role.id)?"~AFK..":++order}. ${guild.members.cache.get(user.id).displayName} (${user.tag})`).join('\n');
 
     return title +'\n Se enviará chequeo AFK a ('+this.displaySize+' primeros no-AFK):'+ '\n```\n' + (top || '<EMPTY>')+ '\n```' +'\nNo se enviará chequeo AFK a:'+ '\n```\n' + (rest || '<EMPTY>')+ '\n```';
 	//return title +'\n Se enviará chequeo AFK a ('+this.displaySize+' primeros no-AFK):'+ '\n\n' + (top || '<EMPTY>')+ '\n' +'\nNo se enviará chequeo AFK a:'+ '\n\n' + (rest || '<EMPTY>')+ '\n';
