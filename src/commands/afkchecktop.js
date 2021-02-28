@@ -59,7 +59,7 @@ class AfkCheckTopCommand extends Command {
 
     let resultsMessage = await sendmessage(message.channel, 'Mass AFK-checking...');
 
-    let calledUsers = channelMonitor.queue.filter(user => message.guild.members.cache.get(user.id).roles.cache.find(role => role.name != "AFK")).slice(0, channelMonitor.displaySize);
+    let calledUsers = channelMonitor.queue.filter(user => !message.guild.members.cache.get(user.id).roles.cache.some(role => role.name === "AFK")).slice(0, channelMonitor.displaySize);
 
 	console.log('Checking first '+ channelMonitor.displaySize +' queue positions (non-AFK): ' + calledUsers);
 

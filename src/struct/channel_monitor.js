@@ -81,7 +81,7 @@ class ChannelMonitor {
 	let order = 0;
 	
 	// Count AFK users
-	let calledUsers = this.queue.filter(user => guild.members.cache.get(user.id).roles.cache.find(role => role.name != "AFK")).slice(0, this.displaySize);
+	let calledUsers = this.queue.filter(user => !guild.members.cache.get(user.id).roles.cache.some(role => role.name === "AFK")).slice(0, this.displaySize);
 	let splitPoint = this.queue.findIndex(user => user === calledUsers[calledUsers.length-1])+1;
 
     let top = this.queue.slice(0, splitPoint).map((user, index) => `${guild.members.cache.get(user.id).roles.cache.get(role.id)?"~AFK..":++order}. ${guild.members.cache.get(user.id).displayName} (${user.tag})`).join('\n');
