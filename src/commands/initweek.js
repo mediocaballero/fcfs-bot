@@ -36,7 +36,7 @@ class InitWeekCommand extends Command {
 
 	// Open closed  queue rooms
 	
-	let HOSTING_ROLE = 	message.guild.roles.cache.find(role => role.name === "Hosting");
+	let HOSTING_ROLE = 	message.guild.roles.cache.find(role => role.name === "Embarque");
 
 	sendmessage(message.channel, 'Abriendo salas de espera...');
 	message.guild.channels.cache.filter(channel => channel.name.includes("espera")).map(channel => channel.updateOverwrite(
